@@ -239,6 +239,81 @@
       .hero-panel, .card-body, .editorial { padding: var(--space-5); }
       .container { width: min(calc(100% - 1rem), var(--content-wide)); }
     }
+
+    /* Image carousel for portfolio cards */
+    .card-media { position: relative; }
+    .carousel {
+      position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden;
+      border-bottom: 1px solid var(--color-divider); border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+    .carousel img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      opacity: 0; transition: opacity 0.5s ease;
+    }
+    .carousel img.active { opacity: 1; }
+    .carousel-nav {
+      position: absolute; bottom: .75rem; left: 50%; transform: translateX(-50%);
+      display: flex; gap: .4rem; z-index: 5;
+    }
+    .carousel-dot {
+      width: 8px; height: 8px; border-radius: 50%; border: none; cursor: pointer; padding: 0;
+      background: color-mix(in srgb, white 50%, transparent);
+      transition: background var(--transition), transform var(--transition);
+    }
+    .carousel-dot.active { background: white; transform: scale(1.3); }
+    .carousel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+      width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer;
+      background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+      backdrop-filter: blur(8px); color: var(--color-text); font-size: 1.1rem;
+      display: grid; place-items: center; opacity: 0; transition: opacity var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    .carousel:hover .carousel-btn { opacity: 1; }
+    .carousel-btn:hover { background: var(--color-surface); }
+    .carousel-btn.prev { left: .6rem; }
+    .carousel-btn.next { right: .6rem; }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.88);
+      display: none; place-items: center; backdrop-filter: blur(6px);
+    }
+    .lightbox.open { display: grid; }
+    .lightbox img {
+      max-width: 92vw; max-height: 88vh; object-fit: contain; border-radius: var(--radius-lg);
+      box-shadow: 0 24px 80px rgba(0,0,0,.5);
+    }
+    .lightbox-close {
+      position: absolute; top: 1.2rem; right: 1.5rem; width: 44px; height: 44px;
+      border-radius: 50%; border: none; background: rgba(255,255,255,.15); color: white;
+      font-size: 1.5rem; cursor: pointer; display: grid; place-items: center;
+      transition: background var(--transition);
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,.3); }
+    .lightbox-caption {
+      position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,.8); font-size: var(--text-sm); text-align: center;
+      max-width: 80vw;
+    }
+
+    /* Editorial hero image */
+    .editorial-hero {
+      border-radius: var(--radius-xl); overflow: hidden; aspect-ratio: 4/5;
+      position: relative;
+    }
+    .editorial-hero img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .editorial-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,.45));
+      display: flex; align-items: flex-end; padding: var(--space-5);
+    }
+    .editorial-hero-overlay span {
+      color: white; font-size: var(--text-xs); font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
@@ -301,19 +376,16 @@
         </div>
         <div class="grid projects">
           <article class="card">
-            <div class="card-media" aria-hidden="true">
-              <div class="layout-demo">
-                <div class="bar"></div>
-                <div class="layout-split">
-                  <div class="thumb"></div>
-                  <div class="layout-column">
-                    <div class="line"></div>
-                    <div class="line short"></div>
-                    <div class="line"></div>
-                    <div class="line short"></div>
-                  </div>
+            <div class="card-media">
+              <div class="carousel" data-carousel>
+                <img src="samples/purdue-statistics.jpg" alt="Purdue Graduate Statistics for IT — presentation slides with regression analysis, hypothesis testing, and data visualization" class="active" loading="lazy">
+                <img src="samples/purdue-risk-analysis.jpg" alt="Purdue Graduate Quantitative Risk Analysis — HyperLoop case study with SWOT analysis, logistic regression, and risk matrices" loading="lazy">
+                <button class="carousel-btn prev" aria-label="Previous image">&#8249;</button>
+                <button class="carousel-btn next" aria-label="Next image">&#8250;</button>
+                <div class="carousel-nav">
+                  <button class="carousel-dot active" aria-label="Image 1"></button>
+                  <button class="carousel-dot" aria-label="Image 2"></button>
                 </div>
-                <div class="cta"></div>
               </div>
             </div>
             <div class="card-body">
@@ -331,16 +403,17 @@
           </article>
 
           <article class="card">
-            <div class="card-media" aria-hidden="true">
-              <div class="layout-demo">
-                <div class="bar" style="width:58%; background: linear-gradient(90deg, var(--color-wine), color-mix(in srgb, var(--color-wine) 45%, white));"></div>
-                <div class="mini-grid">
-                  <div></div><div></div><div></div><div></div>
-                </div>
-                <div class="layout-column">
-                  <div class="line"></div>
-                  <div class="line"></div>
-                  <div class="line short"></div>
+            <div class="card-media">
+              <div class="carousel" data-carousel>
+                <img src="samples/cs-inferential-stats-richter.jpg" alt="Richter Scale Analysis — inferential statistics with regression equations, scatterplots, and hypothesis testing" class="active" loading="lazy">
+                <img src="samples/cs-inferential-stats-hospital.jpg" alt="NCLEX Memorial Hospital — hypothesis testing and P-value analysis for infectious disease data" loading="lazy">
+                <img src="samples/cs-inferential-stats-nclex.jpg" alt="NCLEX Hospital full presentation — measures of variation, confidence intervals, and statistical analysis slides" loading="lazy">
+                <button class="carousel-btn prev" aria-label="Previous image">&#8249;</button>
+                <button class="carousel-btn next" aria-label="Next image">&#8250;</button>
+                <div class="carousel-nav">
+                  <button class="carousel-dot active" aria-label="Image 1"></button>
+                  <button class="carousel-dot" aria-label="Image 2"></button>
+                  <button class="carousel-dot" aria-label="Image 3"></button>
                 </div>
               </div>
             </div>
@@ -359,14 +432,23 @@
           </article>
 
           <article class="card">
-            <div class="card-media" aria-hidden="true">
-              <div class="layout-demo">
-                <div class="bar" style="width:36%"></div>
-                <div class="thumb" style="background: linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 22%, white), color-mix(in srgb, var(--color-primary) 45%, black));"></div>
-                <div class="layout-column">
-                  <div class="line"></div>
-                  <div class="line short"></div>
-                  <div class="cta" style="width:44%; height:12%;"></div>
+            <div class="card-media">
+              <div class="carousel" data-carousel>
+                <img src="samples/cs-web-analytics-actionable.jpg" alt="Make Web Analytics Actionable — GatesNFences case study with dashboards, big data pain points, and web tool ratings" class="active" loading="lazy">
+                <img src="samples/cs-web-analytics-measure.jpg" alt="How We Measure Results — Parts Direct case study with KPI development, product comparison charts, and SWOT.ly analytics" loading="lazy">
+                <img src="samples/cs-web-analytics-swot.jpg" alt="Web Analytics SWOT and Traffic Analysis — clickstream data, website traffic measurement strategies, and business solutions" loading="lazy">
+                <img src="samples/cs-web-analytics-faq.jpg" alt="DLS FAQ and Business Case — Datalytic Software education vs workforce FAQ with salary data and cloud benchmarking" loading="lazy">
+                <img src="samples/cs-web-analytics-report.jpg" alt="Google Analytics vs Adobe Analytics — formal comparison report with key features, fraud protection, and data recommendations" loading="lazy">
+                <img src="samples/cs-web-analytics-newsletter.jpg" alt="TECHS + DATA Newsletter — investigative data journalism with corporate analysis, data visualization articles, and PII policies" loading="lazy">
+                <button class="carousel-btn prev" aria-label="Previous image">&#8249;</button>
+                <button class="carousel-btn next" aria-label="Next image">&#8250;</button>
+                <div class="carousel-nav">
+                  <button class="carousel-dot active" aria-label="Image 1"></button>
+                  <button class="carousel-dot" aria-label="Image 2"></button>
+                  <button class="carousel-dot" aria-label="Image 3"></button>
+                  <button class="carousel-dot" aria-label="Image 4"></button>
+                  <button class="carousel-dot" aria-label="Image 5"></button>
+                  <button class="carousel-dot" aria-label="Image 6"></button>
                 </div>
               </div>
             </div>
@@ -385,18 +467,20 @@
           </article>
 
           <article class="card">
-            <div class="card-media" aria-hidden="true">
-              <div class="layout-demo">
-                <div class="bar" style="width:64%; background: linear-gradient(90deg, var(--color-gold), color-mix(in srgb, var(--color-gold) 45%, white));"></div>
-                <div class="layout-split">
-                  <div class="layout-column">
-                    <div class="line"></div>
-                    <div class="line short"></div>
-                    <div class="line"></div>
-                  </div>
-                  <div class="thumb" style="background: linear-gradient(140deg, color-mix(in srgb, var(--color-gold) 34%, white), color-mix(in srgb, var(--color-primary) 24%, white));"></div>
+            <div class="card-media">
+              <div class="carousel" data-carousel>
+                <img src="samples/cs-software-engineering.jpg" alt="Software Development Management Process — SDLC phases, Acme Company project plan with Great Code Inc presentation" class="active" loading="lazy">
+                <img src="samples/cs-test-automation.jpg" alt="Test Automation Framework — SQA models, unit testing with NUnit/JUnit/TestNG, and DevOps evaluation" loading="lazy">
+                <img src="samples/cs-software-report.jpg" alt="Custom Financial Solutions — software report for mobile and back-house integration with APA-style business case" loading="lazy">
+                <img src="samples/cs-ecommerce-dev.jpg" alt="E-Commerce Database Development — DataGenius proposal with HTML, PHP, MariaDB, and MySQL research" loading="lazy">
+                <button class="carousel-btn prev" aria-label="Previous image">&#8249;</button>
+                <button class="carousel-btn next" aria-label="Next image">&#8250;</button>
+                <div class="carousel-nav">
+                  <button class="carousel-dot active" aria-label="Image 1"></button>
+                  <button class="carousel-dot" aria-label="Image 2"></button>
+                  <button class="carousel-dot" aria-label="Image 3"></button>
+                  <button class="carousel-dot" aria-label="Image 4"></button>
                 </div>
-                <div class="line short"></div>
               </div>
             </div>
             <div class="card-body">
@@ -414,17 +498,19 @@
           </article>
 
           <article class="card">
-            <div class="card-media" aria-hidden="true">
-              <div class="layout-demo">
-                <div class="bar" style="width:42%; background: linear-gradient(90deg, var(--color-primary), var(--color-gold));"></div>
-                <div class="mini-grid">
-                  <div style="min-height: 90px;"></div>
-                  <div style="min-height: 90px;"></div>
-                </div>
-                <div class="layout-column">
-                  <div class="line"></div>
-                  <div class="line short"></div>
-                  <div class="line"></div>
+            <div class="card-media">
+              <div class="carousel" data-carousel>
+                <img src="samples/cs-advanced-java.jpg" alt="Advanced Java — Logika Labs GitHub lab for Track.ly app with CVS repository management and version control" class="active" loading="lazy">
+                <img src="samples/cs-database-fundamentals.jpg" alt="Database Fundamentals — CRUD operations research with many-to-many data tables in MySQL" loading="lazy">
+                <img src="samples/cs-os-architecture-vm.jpg" alt="OS Architecture — Virtual Machine environment setup using Java with VirtualBox system configuration" loading="lazy">
+                <img src="samples/cs-os-ubuntu.jpg" alt="Ubuntu OS Documentation — system tasks, package management, terminal commands, and Linux distribution analysis" loading="lazy">
+                <button class="carousel-btn prev" aria-label="Previous image">&#8249;</button>
+                <button class="carousel-btn next" aria-label="Next image">&#8250;</button>
+                <div class="carousel-nav">
+                  <button class="carousel-dot active" aria-label="Image 1"></button>
+                  <button class="carousel-dot" aria-label="Image 2"></button>
+                  <button class="carousel-dot" aria-label="Image 3"></button>
+                  <button class="carousel-dot" aria-label="Image 4"></button>
                 </div>
               </div>
             </div>
@@ -447,10 +533,11 @@
 
     <section class="section">
       <div class="container editorial">
-        <div class="editorial-board" aria-hidden="true">
-          <div class="headline"></div>
-          <div class="cover"></div>
-          <div class="footer-lines"><div></div><div style="width:78%"></div><div style="width:58%"></div></div>
+        <div class="editorial-hero">
+          <img src="samples/cs-web-analytics-report.jpg" alt="Google Analytics vs Adobe Analytics — formal report demonstrating editorial layout and publication design skill" loading="lazy">
+          <div class="editorial-hero-overlay">
+            <span>Sample: Google Analytics vs Adobe Analytics Report</span>
+          </div>
         </div>
         <div class="editorial-copy">
           <span class="eyebrow">Positioning</span>
@@ -543,6 +630,85 @@
     </div>
   </footer>
 
+
+  <!-- Lightbox overlay -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-label="Image preview">
+    <button class="lightbox-close" aria-label="Close preview">&times;</button>
+    <img src="" alt="" />
+    <div class="lightbox-caption"></div>
+  </div>
+
+  <script>
+    // Carousel functionality
+    document.querySelectorAll('[data-carousel]').forEach(function(carousel) {
+      var imgs = carousel.querySelectorAll('img');
+      var dots = carousel.querySelectorAll('.carousel-dot');
+      var idx = 0;
+
+      function show(n) {
+        idx = (n + imgs.length) % imgs.length;
+        imgs.forEach(function(img) { img.classList.remove('active'); });
+        dots.forEach(function(dot) { dot.classList.remove('active'); });
+        imgs[idx].classList.add('active');
+        if (dots[idx]) dots[idx].classList.add('active');
+      }
+
+      carousel.querySelector('.prev').addEventListener('click', function(e) { e.stopPropagation(); show(idx - 1); });
+      carousel.querySelector('.next').addEventListener('click', function(e) { e.stopPropagation(); show(idx + 1); });
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function(e) { e.stopPropagation(); show(i); });
+      });
+
+      // Click image to open lightbox
+      imgs.forEach(function(img) {
+        img.style.cursor = 'zoom-in';
+        img.addEventListener('click', function() {
+          var lb = document.getElementById('lightbox');
+          lb.querySelector('img').src = img.src;
+          lb.querySelector('img').alt = img.alt;
+          lb.querySelector('.lightbox-caption').textContent = img.alt;
+          lb.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      // Auto-advance every 5s
+      var timer = setInterval(function() { show(idx + 1); }, 5000);
+      carousel.addEventListener('mouseenter', function() { clearInterval(timer); });
+      carousel.addEventListener('mouseleave', function() {
+        timer = setInterval(function() { show(idx + 1); }, 5000);
+      });
+    });
+
+    // Also make editorial hero clickable
+    var editorialImg = document.querySelector('.editorial-hero img');
+    if (editorialImg) {
+      editorialImg.style.cursor = 'zoom-in';
+      editorialImg.addEventListener('click', function() {
+        var lb = document.getElementById('lightbox');
+        lb.querySelector('img').src = editorialImg.src;
+        lb.querySelector('img').alt = editorialImg.alt;
+        lb.querySelector('.lightbox-caption').textContent = editorialImg.alt;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    }
+
+    // Close lightbox
+    var lb = document.getElementById('lightbox');
+    lb.querySelector('.lightbox-close').addEventListener('click', function() {
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+    lb.addEventListener('click', function(e) {
+      if (e.target === lb) { lb.classList.remove('open'); document.body.style.overflow = ''; }
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && lb.classList.contains('open')) {
+        lb.classList.remove('open'); document.body.style.overflow = '';
+      }
+    });
+  </script>
   <script>
     (function () {
       const root = document.documentElement;

@@ -48,6 +48,6 @@ Some UX work (for courses, client‑like projects, or sensitive contexts) is sto
 
 If you need to see additional UX artifacts:
 
-1. Contact me at [your email] or reply to my portfolio approval email.
+1. Email me at logicalcoders@outlook.com or use the [contact page](https://anelhenning2-collab.github.io/contact-hub/).
 2. Mention this repository and the category name: “UX/Design”.
-3. Include your GitHub username so I can add you as a collaborator to the matching private repository (`ux-design-studies-private`).
+3. Include your GitHub username so I can add you as a collaborator to the matching private repository.
